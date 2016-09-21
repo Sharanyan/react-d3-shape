@@ -7,26 +7,25 @@ import {
 
 import D3Scale from 'd3-scale';
 import {series} from '../utils/series';
+import BarRectangle from './bar_rectangle';
 
 export default class BarGroup extends Component {
   constructor (props) {
     super(props);
+    this.barRadius = {
+      topLeft: 3,
+      topRight: 3,
+      bottomLeft: 0,
+      bottomRight: 0
+    }
   }
 
   static defaultProps = {
     onMouseOver: (d) => {},
     onMouseOut: (d) => {},
+    onClick: (d) => {},
     barClassName: 'react-d3-basic__bar_group'
   }
-
-  triggerOver(data , e) {
-    this.props.onMouseOver(e, data)
-  }
-
-  triggerOut(data, e) {
-    this.props.onMouseOut(e, data)
-  }
-
 
   _mkBarGroup(dom) {
     const {
@@ -34,7 +33,8 @@ export default class BarGroup extends Component {
       margins,
       barClassName,
       xScaleSet,
-      yScaleSet
+      yScaleSet,
+      rounded
     } = this.props;
 
     const that = this
@@ -66,17 +66,20 @@ export default class BarGroup extends Component {
             {
               barGroup.data.map((bar, j) => {
                 return (
-                  <rect
+                  <BarRectangle
                     key={j}
-                    className={`${barClassName} bar`}
+                    barClassName={barClassName}
                     width={x1.bandwidth()}
                     x={xScaleSet(bar.x) || xScaleSet(bar.x) === 0? (xScaleSet(bar.x) + x1.bandwidth() * i) : -10000}
                     y={bar.y < 0 ? zeroBase: yScaleSet(bar.y)}
                     height={bar.y < domain[0] ? 0: Math.abs(zeroBase - yScaleSet(bar.y))}
                     fill={barGroup.color}
-                    onMouseOut={that.triggerOut.bind(this, bar)}
-                    onMouseOver={that.triggerOver.bind(this, bar)}
                     style={barGroup.style}
+                    onMouseOut={this.props.onMouseOut}
+                    onMouseOver={this.props.onMouseOver}
+                    onClick={this.props.onClick}
+                    cornerRadius={rounded?this.barRadius:{}}
+                    data={bar}
                   />
                 )
               })

@@ -1,5 +1,5 @@
 {
-  "name": "react-d3-shape",
+  "name": "@echo360/react-d3-shape",
   "version": "0.3.25",
   "description": "react shape component",
   "main": "./lib/index.js",
@@ -11,7 +11,7 @@
     "build": "rm -rf ./lib && BABEL_ENV=production ./node_modules/.bin/babel ./src --out-dir ./lib",
     "prod": "BABEL_ENV=production NODE_ENV=0 webpack --config webpack.prod.config.js && BABEL_ENV=production NODE_ENV=1 webpack --config webpack.prod.config.js"
   },
-  "author": "ElixirDoc team",
+  "author": "alp",
   "license": "Apache 2.0",
   "devDependencies": {
     "babel-cli": "^6.6.4",

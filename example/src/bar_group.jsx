@@ -105,6 +105,7 @@ var Container = React.createClass({
           height= {this.state.height}
           >
           <BarGroup
+            rounded={true}
             chartSeries = {this.state.series}
           />
         </Chart>

@@ -7,10 +7,17 @@ import {
 
 import d3 from 'd3';
 import { series } from '../utils/series';
+import BarRectangle from './bar_rectangle';
 
 export default class BarStack extends Component {
   constructor(props) {
     super(props);
+    this.barRadius = {
+      topLeft: 3,
+      topRight: 3,
+      bottomLeft: 0,
+      bottomRight: 0
+    }
   }
 
   static defaultProps = {
@@ -20,18 +27,6 @@ export default class BarStack extends Component {
     barClassName: 'react-d3-basic__bar_stack'
   }
 
-  triggerOver(data, e) {
-    this.props.onMouseOver(e, data)
-  }
-
-  triggerOut(data, e) {
-    this.props.onMouseOut(e, data)
-  }
-
-  triggerClick(data, e) {
-    this.props.onClick(e, data);
-  }
-
   _mkBarStack() {
     const {
       height,
@@ -39,7 +34,8 @@ export default class BarStack extends Component {
       barClassName,
       xScaleSet,
       yScaleSet,
-      barWidth
+      barWidth,
+      rounded
     } = this.props;
 
     const that = this;
@@ -79,16 +75,18 @@ export default class BarStack extends Component {
                 {
                   barGroup.data.map((bar, j) => {
                     return (
-                      <rect
-                        className={`${barClassName} bar`}
+                      <BarRectangle
+                        barClassName={barClassName}
                         width={barBandWidth}
                         x={xScaleSet(bar.x) || xScaleSet(bar.x) === 0? xScaleSet(bar.x): -10000}
                         y={yScaleSet(bar.y0 + bar.y)}
                         height={Math.abs(yScaleSet(bar.y) - yScaleSet(0))}
-                        onMouseOut={that.triggerOut.bind(this, bar)}
-                        onMouseOver={that.triggerOver.bind(this, bar)}
-                        onClick = { that.triggerClick.bind(this, bar) }
+                        onMouseOut={this.props.onMouseOut}
+                        onMouseOver={this.props.onMouseOver}
+                        onClick={this.props.onClick}
                         key={j}
+                        data={bar}
+                        cornerRadius={rounded?this.barRadius:{}}
                         />
                     )
                   })

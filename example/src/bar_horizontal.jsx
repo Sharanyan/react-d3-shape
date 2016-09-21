@@ -93,6 +93,7 @@ var Container = React.createClass({
           xTicks= {xTicks}
           >
           <BarHorizontal
+            rounded={true}
             chartSeries = {this.state.series}
           />
           <Xaxis/>

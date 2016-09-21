@@ -7,26 +7,25 @@ import {
 
 import D3Scale from 'd3-scale';
 import { series } from '../utils/series';
+import BarRectangle from './bar_rectangle';
 
 export default class BarGroupHorizontal extends Component {
   constructor(props) {
     super(props);
+    this.barRadius = {
+      topLeft: 0,
+      topRight: 3,
+      bottomLeft: 0,
+      bottomRight: 3
+    }
   }
 
   static defaultProps = {
     onMouseOver: (d) => {},
     onMouseOut: (d) => {},
+    onClick: (d) => {},
     barClassName: 'react-d3-basic__bar_group_horizontal'
   }
-
-  triggerOver(data, e) {
-    this.props.onMouseOver(e, data)
-  }
-
-  triggerOut(data, e) {
-    this.props.onMouseOut(e, data)
-  }
-
 
   _mkBarGroup() {
     const {
@@ -36,7 +35,8 @@ export default class BarGroupHorizontal extends Component {
       xScaleSet,
       yScaleSet,
       onMouseOut,
-      onMouseOver
+      onMouseOver,
+      rounded
     } = this.props;
 
     const that = this
@@ -70,17 +70,20 @@ export default class BarGroupHorizontal extends Component {
                 {
                   barGroup.data.map((bar, j) => {
                     return(
-                      <rect
-                        className={`${barClassName} bar`}
+                      <BarRectangle
+                        barClassName={barClassName}
                         height={y1.bandwidth()}
                         y={yScaleSet(bar.y) || yScaleSet(bar.y) === 0? (yScaleSet(bar.y) + y1.bandwidth() * i) : -10000}
                         x={bar.x > 0 ? zeroBase: (zeroBase - Math.abs(zeroBase - xScaleSet(bar.x)))}
                         width={bar.x < domain[0] ? 0: Math.abs(zeroBase - xScaleSet(bar.x))}
                         fill={barGroup.color}
-                        onMouseOut={that.triggerOut.bind(this, bar)}
-                        onMouseOver={that.triggerOver.bind(this, bar)}
+                        onMouseOut={this.props.onMouseOut}
+                        onMouseOver={this.props.onMouseOver}
+                        onClick={this.props.onClick}
                         style={barGroup.style}
                         key={j}
+                        cornerRadius={rounded?this.barRadius:{}}
+                        data={bar}
                         />
                     )
                   })

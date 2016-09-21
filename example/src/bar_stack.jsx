@@ -104,6 +104,7 @@ module.exports = React.createClass({
           stack= {true}
           >
           <BarStack
+            rounded={true}
             chartSeries = {this.state.series}
           />
           <Xaxis style= {{

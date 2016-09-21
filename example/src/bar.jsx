@@ -98,6 +98,7 @@ var Container = React.createClass({
           yTicks= {yTicks}
           >
           <Bar
+            rounded={true}
             chartSeries = {this.state.series}
             onMouseOver= {onMouseOver}
             onMouseOut= {onMouseOut}

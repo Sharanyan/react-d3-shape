@@ -5,11 +5,19 @@ import {
   Component,
 } from 'react';
 
+import BarRectangle from './bar_rectangle';
+
 import { series } from '../utils/series';
 
 export default class Bar extends Component {
   constructor(props) {
     super(props);
+    this.barRadius = {
+      topLeft: 3,
+      topRight: 3,
+      bottomLeft: 0,
+      bottomRight: 0
+    }
   }
 
   static defaultProps = {
@@ -19,26 +27,14 @@ export default class Bar extends Component {
     barClassName: 'react-d3-basic__bar'
   }
 
-  triggerOver(data, e) {
-    this.props.onMouseOver(e, data)
-  }
-
-  triggerOut(data, e) {
-    this.props.onMouseOut(e, data)
-  }
-
-  triggerClick(data, e) {
-    this.props.onClick(e, data);
-  }
-
   _mkBar() {
     const {
       height,
       width,
-      margins,
       barClassName,
       xScaleSet,
-      yScaleSet
+      yScaleSet,
+      rounded
     } = this.props;
 
     const that = this;
@@ -58,21 +54,21 @@ export default class Bar extends Component {
       <g>
         {
           dataset.data.map((bar, i) => {
-            return (
-              <rect
-                className={`${barClassName} bar`}
-                x={xScaleSet(bar.x) || xScaleSet(bar.x) === 0? xScaleSet(bar.x) : -10000}
-                y={bar.y < 0 ? zeroBase: yScaleSet(bar.y)}
-                width={xScaleSet.bandwidth()}
-                height={bar.y < domain[0] ? 0: Math.abs(zeroBase - yScaleSet(bar.y))}
-                fill={bar._style.color? bar._style.color: dataset.color}
-                style={Object.assign({}, dataset.style, bar._style)}
-                onMouseOut={that.triggerOut.bind(this, bar)}
-                onMouseOver={that.triggerOver.bind(this, bar)}
-                onClick={that.triggerClick.bind(this, bar)}
-                key={i}
-                />
-            )
+            return <BarRectangle
+              barClassName={barClassName}
+              x={xScaleSet(bar.x) || xScaleSet(bar.x) === 0? xScaleSet(bar.x) : -10000}
+              y={bar.y < 0 ? zeroBase: yScaleSet(bar.y)}
+              width={xScaleSet.bandwidth()}
+              height={bar.y < domain[0] ? 0: Math.abs(zeroBase - yScaleSet(bar.y))}
+              fill={bar._style.color? bar._style.color: dataset.color}
+              style={Object.assign({}, dataset.style, bar._style)}
+              key={i}
+              onMouseOut={this.props.onMouseOut}
+              onMouseOver={this.props.onMouseOver}
+              onClick={this.props.onClick}
+              cornerRadius={rounded?this.barRadius:{}}
+              data={bar}
+            />;
           })
         }
       </g>

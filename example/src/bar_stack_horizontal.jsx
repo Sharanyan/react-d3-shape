@@ -105,6 +105,7 @@ module.exports = React.createClass({
           xTickFormat= {xTickFormat}
           >
           <BarStackHorizontal
+            rounded={true}
             chartSeries = {this.state.series}
           />
           <Xaxis/>
