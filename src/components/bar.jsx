@@ -66,7 +66,7 @@ export default class Bar extends Component {
               onMouseOut={this.props.onMouseOut}
               onMouseOver={this.props.onMouseOver}
               onClick={this.props.onClick}
-              cornerRadius={rounded?this.barRadius:{}}
+              cornerRadius={rounded?this.barRadius:undefined}
               data={bar}
             />;
           })

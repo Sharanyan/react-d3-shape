@@ -1,7 +1,6 @@
 "use strict";
 
 export default function rounded(x, y, w, h, cornerRadius) {
-  console.log(cornerRadius)
   var retval;
   retval  = "M" + (x + cornerRadius.topLeft) + "," + y;
   retval += "h" + (w - cornerRadius.topLeft - cornerRadius.topRight);
